@@ -58,6 +58,7 @@ body {
 }
 .Faq summary::marker{
   content: '';
+  display: none;
 }
 .Faq[open] .SummMark::before{
   position: absolute;
