@@ -90,7 +90,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="w-[80%] mx-auto">
+          <div className="md:w-[80%] sm:w-[90%] w-[95%] mx-auto">
             <div className="flex sm:flex-row flex-col-reverse mt-5 justify-between items-center pt-[90px]">
               <div className="h-[35vh] lg:w-[20%] md:w-[25%] sm:w-[30%] w-full sm:mt-0 mt-5 bg-[#F5F5F5] rounded-2xl"></div>
               <div className="lg:w-[50%] md:w-[60%] sm:w-[65%] w-full">
