@@ -76,7 +76,7 @@ function Navbar() {
             Signup
           </Link>
         </div>
-        <div className="relative">
+        <div className="relative lg:hidden block">
           <MdOutlineSegment className="md:hidden block cursor-pointer text-[#F5F5F5]" onClick={()=>setNav(!nav)}/>
           <div className={`${nav === false ? 'hidden' : 'block'} md:hidden  absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}>
             <ul className="Navbarr" onClick={()=>setNav(false)}>

@@ -39,7 +39,7 @@ export default function Home() {
               Upload 3D Ultrasound Images
             </button>
           </div>
-          <div className="lg:h-[80vh] h-[50vh] w-[90%] mx-auto md:p-7 p-3 bg-[#121212] rounded-3xl shadow-sm">
+          <div className="lg:h-[80vh] h-[50vh] w-[80%] mx-auto md:p-7 p-3 bg-[#121212] rounded-3xl shadow-sm">
             <img src="./UltraSound.png" className="h-full w-full" alt="" />
           </div>
         </div>
