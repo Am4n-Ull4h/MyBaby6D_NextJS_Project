@@ -5,8 +5,8 @@ function Footer() {
 
     let navigate = useRouter()
   return (
-    <Fragment> <br />
-        <div className='w-full bg-[#121212] p-5 text-[#f5f5f59d]'>
+    <Fragment>
+        <div className='w-full bg-[#121212] p-5 pt-7 text-[#f5f5f59d]'>
             <div className='flex justify-evenly'>
                 <div className='md:w-[40%] w-[48%]'>
                     <p className='text-lg font-light'>Follow us on social media for regular freebies and exclusive offers!</p>
