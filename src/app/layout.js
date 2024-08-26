@@ -5,6 +5,7 @@ import "./globals.css";
 import { usePathname } from "next/navigation";
 import { lazy, Suspense } from "react";
 
+
 const Navbar = lazy(() => import("./Components/Navbar/Navbar"));
 const Footer = lazy(() => import("./Components/Footer/Footer"));
 
@@ -12,8 +13,13 @@ const inter = Raleway({ subsets: ["latin"] });
 
 export default function RootLayout({ children }) {
   let pathName = usePathname();
-  const noFooterRoutes = ["/login", "/signup"];
+
+
+  const noFooterRoutes = ["/login", "/signup", "/upload"];
   const noNavbarRoutes = ["/upload"];
+
+
+
   return (
     <html lang="en">
       <head>

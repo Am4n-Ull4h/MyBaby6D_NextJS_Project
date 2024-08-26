@@ -3,11 +3,35 @@
 import React, { Fragment, lazy, Suspense, useState } from 'react'
 const UploadNav = lazy(()=>import('./UploadNavbar'))
 import { TbCloudUpload } from "react-icons/tb";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from 'next/navigation';
+import Footer from '../Components/Footer/Footer';
+import { bouncy } from 'ldrs'
+
+
+
 
 
 function UploadPage() {
+    bouncy.register()
 
     const [ Upload, setUpload ] = useState('')
+  const [user, loading] = useAuthState(auth); // Get the authenticated user
+  const navigate = useRouter()
+
+  if (loading) {
+    // You can return a loading spinner or message here
+    return <div className='h-screen w-full flex justify-center items-center'><l-bouncy
+    size="45"
+    speed="1.75" 
+    color="yellow" 
+  ></l-bouncy></div>;
+  }
+
+  if (!user) {
+    navigate.push('/login')
+  }
 
     let uploadImage = (e) =>{
         let url = URL.createObjectURL(e.target.files[0])
@@ -24,6 +48,9 @@ function UploadPage() {
                 <div className='w-[90%] relative mx-auto rounded-xl mt-12 bg-[#ADB5BD] h-[30vh] flex flex-col justify-center items-center text-[#000000a1] text-[12px] font-medium'>
                     <TbCloudUpload className='text-[40px] text-[#0000007e] mb-2'/>
                     <p>CHOOSE SCAN</p>
+                    {
+                        Upload !== '' ? <img src={Upload} alt='Img '/> : null
+                    }
                     <input type="file" name="" className='z-10 cursor-pointer opacity-0 rounded-lg absolute h-full w-full' id="upload" onChange={uploadImage} />
                 </div>
                 <button className='rounded-md shadow py-1 px-3 bg-[#86DEF4] mt-12'>Generate</button>
@@ -39,6 +66,9 @@ function UploadPage() {
 
 
         </div>
+        <Suspense>
+            <Footer />
+        </Suspense>
       
     </Fragment>
   )

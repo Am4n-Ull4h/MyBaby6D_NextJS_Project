@@ -2,13 +2,18 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React, { Fragment, useState } from "react";
 import { MdOutlineSegment } from "react-icons/md";
-
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { signOut } from "firebase/auth";
 
 function Navbar() {
   let navigate = useRouter();
   let pathName = usePathname();
-  const [nav, setNav] = useState(false)
+  const [nav, setNav] = useState(false);
+  const [user] = useAuthState(auth); // Get the authenticated user
 
+
+  
   return (
     <Fragment>
       <nav className="bg-[#121212] px-7 flex justify-between items-center h-[10vh]">
@@ -17,11 +22,12 @@ function Navbar() {
             src="./Logo.png"
             className="cursor-pointer h-[200px] shadow"
             onClick={() => navigate.push("/")}
-            alt=""
+            alt="Logo"
           />
         </div>
 
-        <ul className="md:flex hidden justify-between lg:w-[25%] md:w-[35%]  Navbarr">
+        {/* Desktop navigation */}
+        <ul className="md:flex hidden justify-between lg:w-[25%] md:w-[35%] Navbarr">
           <li>
             <Link
               href="/"
@@ -65,21 +71,43 @@ function Navbar() {
             </Link>
           </li>
         </ul>
+
+        {/* Conditional rendering for Login/Signup or Logout in desktop view */}
         <div className="md:block hidden">
-          <Link
-            href="/login"
-            className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]"
-          >
-            Login
-          </Link>
-          <Link href="/signup" className="text-[#F05454] text-sm">
-            Signup
-          </Link>
+          {user ? (
+            <button
+              onClick={() => signOut(auth)}
+              className="text-[#F05454] text-sm"
+            >
+              Logout
+            </button>
+          ) : (
+            <>
+              <Link
+                href="/login"
+                className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]"
+              >
+                Login
+              </Link>
+              <Link href="/signup" className="text-[#F05454] text-sm">
+                Signup
+              </Link>
+            </>
+          )}
         </div>
-        <div className="relative lg:hidden block">
-          <MdOutlineSegment className="md:hidden block cursor-pointer text-[#F5F5F5]" onClick={()=>setNav(!nav)}/>
-          <div className={`${nav === false ? 'hidden' : 'block'} md:hidden  absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}>
-            <ul className="Navbarr" onClick={()=>setNav(false)}>
+
+        {/* Mobile Menu */}
+        <div className="relative md:hidden block">
+          <MdOutlineSegment
+            className="md:hidden block cursor-pointer text-[#F5F5F5]"
+            onClick={() => setNav(!nav)}
+          />
+          <div
+            className={`${
+              nav === false ? "hidden" : "block"
+            } md:hidden  absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}
+          >
+            <ul className="Navbarr" onClick={() => setNav(false)}>
               <li className="my-2">
                 <Link
                   href="/"
@@ -125,16 +153,29 @@ function Navbar() {
                 </Link>
               </li>
             </ul>
-            <div className="block " onClick={()=>setNav(false)}>
-              <Link
-                href="/login"
-                className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]"
-              >
-                Login
-              </Link>
-              <Link href="/signup" className="text-[#F05454] text-sm">
-                Signup
-              </Link>
+
+            {/* Conditional rendering for Login/Signup or Logout in mobile menu */}
+            <div className="block" onClick={() => setNav(false)}>
+              {user ? (
+                <button
+                  className="text-[#F05454] text-sm"
+                  onClick={() => signOut(auth)}
+                >
+                  Logout
+                </button>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]"
+                  >
+                    Login
+                  </Link>
+                  <Link href="/signup" className="text-[#F05454] text-sm">
+                    Signup
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
