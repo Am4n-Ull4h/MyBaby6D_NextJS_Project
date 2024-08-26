@@ -13,6 +13,7 @@ const inter = Raleway({ subsets: ["latin"] });
 export default function RootLayout({ children }) {
   let pathName = usePathname();
   const noFooterRoutes = ["/login", "/signup"];
+  const noNavbarRoutes = ["/upload"];
   return (
     <html lang="en">
       <head>
@@ -30,7 +31,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <Suspense>
-          <Navbar />
+          
+          {!noNavbarRoutes.includes(pathName) && <Navbar />}
+
           {children}
           {!noFooterRoutes.includes(pathName) && <Footer />}
         </Suspense>
