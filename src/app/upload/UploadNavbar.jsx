@@ -32,7 +32,7 @@ function Navbar() {
 
         </div>
 
-        <div className="relative">
+        <div className="relative sm:hidden block">
           <MdOutlineSegment className="sm:hidden block cursor-pointer text-[#F5F5F5]" onClick={()=>setNav(!nav)}/>
         <div className={`w-[20vw] absolute py-5 rounded-xl flex flex-col items-center  top-10 -right-5 bg-[#00000053] ${nav === true ? "block sm:hidden" : 'hidden'}`}>
              <MdCancelPresentation  className="absolute right-2" onClick={()=>setNav(false)}/>
