@@ -1,77 +1,69 @@
-"use client"
+"use client";
 
-import React, { Fragment, lazy, Suspense, useState } from 'react'
-const UploadNav = lazy(()=>import('./UploadNavbar'))
+import React, { Fragment, lazy, Suspense, useState, useEffect } from 'react';
+const UploadNav = lazy(() => import('./UploadNavbar'));
 import { TbCloudUpload } from "react-icons/tb";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from 'next/navigation';
 import Footer from '../Components/Footer/Footer';
-import { bouncy } from 'ldrs'
+import { bouncy } from 'ldrs';
 
-
-
-
+// Note: Since 'ldrs' and other client-only code should be inside useEffect or lazy-loaded, wrap it properly.
 
 function UploadPage() {
-    bouncy.register()
+    const [Upload, setUpload] = useState('');
+    const [user, loading] = useAuthState(auth);
+    const router = useRouter();
 
-    const [ Upload, setUpload ] = useState('')
-  const [user, loading] = useAuthState(auth); // Get the authenticated user
-  const navigate = useRouter()
+    useEffect(() => {
+        if (loading) return; // Do nothing while loading
+        if (!user) router.push('/login'); // Redirect to login if no user
+    }, [loading, user, router]);
 
-  if (loading) {
-    // You can return a loading spinner or message here
-    return <div className='h-screen w-full flex justify-center items-center'><l-bouncy
-    size="45"
-    speed="1.75" 
-    color="yellow" 
-  ></l-bouncy></div>;
-  }
+    const uploadImage = (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            setUpload(url);
+        }
+    };
 
-  if (!user) {
-    navigate.push('/login')
-  }
+    // Dynamically import bouncy inside useEffect
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            bouncy.register();
+        }
+    }, []);
 
-    let uploadImage = (e) =>{
-        let url = URL.createObjectURL(e.target.files[0])
-        setUpload(url)
-    }
-  return (
-    <Fragment>
-        <Suspense>
-            <UploadNav />
-        </Suspense>
-        <div className='GradientBG3 sm:h-[90vh] w-full flex sm:flex-row flex-col items-center  justify-around'>
-            <div className='rounded-xl bg-[#F5F5F5]  xl:w-[15%] lg:w-[20%] md:w-[26%] sm:w-[32%] w-[50%] sm:mt-0 mt-8 flex items-center py-8 flex-col'>
-                <h1 className='text-[#ED82B8] font-bold text-[18px]'>Upload Image</h1>
-                <div className='w-[90%] relative mx-auto rounded-xl mt-12 bg-[#ADB5BD] h-[30vh] flex flex-col justify-center items-center text-[#000000a1] text-[12px] font-medium'>
-                    <TbCloudUpload className='text-[40px] text-[#0000007e] mb-2'/>
-                    <p>CHOOSE SCAN</p>
-                    {
-                        Upload !== '' ? <img src={Upload} alt='Img '/> : null
-                    }
-                    <input type="file" name="" className='z-10 cursor-pointer opacity-0 rounded-lg absolute h-full w-full' id="upload" onChange={uploadImage} />
+    return (
+        <Fragment>
+            <Suspense fallback={<div>Loading...</div>}>
+                <UploadNav />
+            </Suspense>
+            <div className='GradientBG3 sm:h-[90vh] w-full flex sm:flex-row flex-col items-center justify-around'>
+                <div className='rounded-xl bg-[#F5F5F5] xl:w-[15%] lg:w-[20%] md:w-[26%] sm:w-[32%] w-[50%] sm:mt-0 mt-8 flex items-center py-8 flex-col'>
+                    <h1 className='text-[#ED82B8] font-bold text-[18px]'>Upload Image</h1>
+                    <div className='w-[90%] relative mx-auto rounded-xl mt-12 bg-[#ADB5BD] h-[30vh] flex flex-col justify-center items-center text-[#000000a1] text-[12px] font-medium'>
+                        <TbCloudUpload className='text-[40px] text-[#0000007e] mb-2' />
+                        <p>CHOOSE SCAN</p>
+                        {Upload !== '' && <img src={Upload} alt='Img' />}
+                        <input type="file" className='z-10 cursor-pointer opacity-0 rounded-lg absolute h-full w-full' id="upload" onChange={uploadImage} />
+                    </div>
+                    <button className='rounded-md shadow py-1 px-3 bg-[#86DEF4] mt-12'>Generate</button>
                 </div>
-                <button className='rounded-md shadow py-1 px-3 bg-[#86DEF4] mt-12'>Generate</button>
-            </div>
-
-            <div className='rounded-xl bg-[#F5F5F5] xl:w-[50%] lg:w-[55%] sm:w-[62%] w-[90%] sm:my-0 my-8 flex items-center py-3 flex-col'>
-                <h1 className='text-[#ED82B8] mt-7 font-bold text-[18px]'>Results</h1>
-                <div className='w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[45vh]'>
-                    { Upload === '' ? '' : <img src={Upload} alt="" className='h-full w-full ' />}
+                <div className='rounded-xl bg-[#F5F5F5] xl:w-[50%] lg:w-[55%] sm:w-[62%] w-[90%] sm:my-0 my-8 flex items-center py-3 flex-col'>
+                    <h1 className='text-[#ED82B8] mt-7 font-bold text-[18px]'>Results</h1>
+                    <div className='w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[45vh]'>
+                        {Upload === '' ? '' : <img src={Upload} alt="" className='h-full w-full' />}
+                    </div>
                 </div>
-             
             </div>
-
-
-        </div>
-        <Suspense>
-            <Footer />
-        </Suspense>
-      
-    </Fragment>
-  )
+            <Suspense fallback={<div>Loading footer...</div>}>
+                <Footer />
+            </Suspense>
+        </Fragment>
+    );
 }
 
-export default UploadPage
+export default UploadPage;
