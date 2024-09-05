@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { Fragment, lazy, Suspense, useState, useEffect } from 'react';
 const UploadNav = lazy(() => import('./UploadNavbar'));
@@ -7,19 +7,20 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from 'next/navigation';
 import Footer from '../Components/Footer/Footer';
-import { bouncy } from 'ldrs';
-
-// Note: Since 'ldrs' and other client-only code should be inside useEffect or lazy-loaded, wrap it properly.
 
 function UploadPage() {
     const [Upload, setUpload] = useState('');
-    const [user, loading] = useAuthState(auth);
+    const [user] = useAuthState(auth);
     const router = useRouter();
 
     useEffect(() => {
-        if (loading) return; // Do nothing while loading
-        if (!user) router.push('/login'); // Redirect to login if no user
-    }, [loading, user, router]);
+        if (!user) {
+            router.push('/login'); // Redirect to login if no user
+        }
+    }, [user, router]);
+    
+
+   
 
     const uploadImage = (e) => {
         const file = e.target.files[0];
@@ -29,16 +30,10 @@ function UploadPage() {
         }
     };
 
-    // Dynamically import bouncy inside useEffect
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            bouncy.register();
-        }
-    }, []);
 
     return (
         <Fragment>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={null}>
                 <UploadNav />
             </Suspense>
             <div className='GradientBG3 sm:h-[90vh] w-full flex sm:flex-row flex-col items-center justify-around'>
@@ -59,7 +54,7 @@ function UploadPage() {
                     </div>
                 </div>
             </div>
-            <Suspense fallback={<div>Loading footer...</div>}>
+            <Suspense fallback={null}>
                 <Footer />
             </Suspense>
         </Fragment>

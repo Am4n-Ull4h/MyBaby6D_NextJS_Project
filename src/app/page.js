@@ -139,7 +139,7 @@ export default function Home() {
                 </table>
               </div>
             </div>
-            <Suspense>
+            <Suspense fallback={null}>
               <HomeBlogs />
               <FreqaskQuest />
             </Suspense>

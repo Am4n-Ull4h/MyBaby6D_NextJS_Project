@@ -7,13 +7,11 @@ import { auth } from "@/app/firebase/config";
 import { signOut } from "firebase/auth";
 
 function Navbar() {
-  let navigate = useRouter();
-  let pathName = usePathname();
+  const navigate = useRouter();
+  const pathName = usePathname();
   const [nav, setNav] = useState(false);
   const [user] = useAuthState(auth); // Get the authenticated user
 
-
-  
   return (
     <Fragment>
       <nav className="bg-[#121212] px-7 flex justify-between items-center h-[10vh]">
@@ -78,6 +76,7 @@ function Navbar() {
             <button
               onClick={() => signOut(auth)}
               className="text-[#F05454] text-sm"
+              type="button"
             >
               Logout
             </button>
@@ -101,6 +100,7 @@ function Navbar() {
           <MdOutlineSegment
             className="md:hidden block cursor-pointer text-[#F5F5F5]"
             onClick={() => setNav(!nav)}
+            aria-label="Toggle Navigation"
           />
           <div
             className={`${
@@ -160,6 +160,7 @@ function Navbar() {
                 <button
                   className="text-[#F05454] text-sm"
                   onClick={() => signOut(auth)}
+                  type="button"
                 >
                   Logout
                 </button>

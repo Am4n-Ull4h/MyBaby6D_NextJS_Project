@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
         <link rel="icon" href="./Logo.png" />
       </head>
       <body className={inter.className}>
-        <Suspense>
+        <Suspense fallback={null}>
           
           {!noNavbarRoutes.includes(pathName) && <Navbar />}
 
