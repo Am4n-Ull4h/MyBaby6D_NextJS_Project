@@ -74,7 +74,9 @@ function Navbar() {
         <div className="md:block hidden">
           {user ? (
             <button
-              onClick={() => signOut(auth)}
+              onClick={() => {signOut(auth)
+                navigate.push('/')
+              }}
               className="text-[#F05454] text-sm"
               type="button"
             >
@@ -159,7 +161,9 @@ function Navbar() {
               {user ? (
                 <button
                   className="text-[#F05454] text-sm"
-                  onClick={() => signOut(auth)}
+                  onClick={() => {signOut(auth)
+                    navigate.push('/')
+                  }}
                   type="button"
                 >
                   Logout
