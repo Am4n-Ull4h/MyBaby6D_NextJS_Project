@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import React, { Fragment, useRef, useState } from "react";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import React, { Fragment, useRef, useState, useEffect, Suspense } from "react";
+import { useSignInWithEmailAndPassword, useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
+import Navbar from "../Components/Navbar/Navbar";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
@@ -15,10 +16,16 @@ function LoginPage() {
   const navigate = useRouter();
 
   const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [user, loading, error] = useAuthState(auth);
+
+  useEffect(() => {
+    if (loading) return; // Do nothing while loading
+    if (user) navigate.push("/"); // Redirect if user is logged in
+  }, [user, loading, navigate]);
 
   const handleSignIn = async () => {
     try {
-      if (!(email === "") || !(password === "")) {
+      if (email !== "" && password !== "") {
         const res = await signInWithEmailAndPassword(email, password);
         setEmail("");
         setPassword("");
@@ -26,7 +33,7 @@ function LoginPage() {
           loginError.current.style.display = "none";
           navigate.push("/");
         } else {
-        loginError.current.innerHTML = "*Email & Password not matched";
+          loginError.current.innerHTML = "*Email & Password not matched";
           loginError.current.style.display = "block";
         }
       } else {
@@ -40,6 +47,9 @@ function LoginPage() {
 
   return (
     <Fragment>
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <div className="GradientBG2 h-[90vh] w-full flex justify-center items-center">
         <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%] bg-[#F5F5F5] rounded-xl pb-8">
           <h1 className="text-center font-extrabold text-[#ED82B8] text-xl my-5">

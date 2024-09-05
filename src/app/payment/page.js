@@ -8,9 +8,9 @@ function PaymentPage() {
       <div className="w-full GradientBG3 sm:h-[90vh]">
         <div className="w-[80%] flex sm:flex-row flex-col justify-around items-center h-full mx-auto">
           <div className="lg:w-[25%] md:w-[35%] sm:w-[45%] w-[70%] sm:mt-0 PaymentBox mt-8 rounded-2xl px-5 py-6 bg-[#000000] text-[#FFFFFF]">
-            <h1 className="font-semibold">Free</h1>
-            <p className="font-bold text-[22px]">
-              $0<span className="font-medium">/mo</span>
+            <h1 className="font-bold">One Picture</h1>
+            <p className="font-bold text-[25px] paymentPrice">
+              $14.99<span className="font-medium text-[18px]">/img</span>
             </p>
             <div className="text-[#E7F5FF] mt-12">
               <p className="py-2 flex items-baseline gap-1 text-[13px]"><IoCheckmarkCircleOutline /> Single generation</p>
@@ -22,9 +22,9 @@ function PaymentPage() {
             </button>
           </div>
           <div className="lg:w-[25%] md:w-[35%] sm:w-[45%] w-[70%] sm:my-0 PaymentBox my-8 rounded-2xl px-5 py-6 bg-[#000000] text-[#FFFFFF]">
-            <h1 className="font-semibold">Premium</h1>
-            <p className="font-bold text-[22px]">
-              $9.99<span className="font-medium">/mo</span>
+            <h1 className="font-bold">Professional</h1>
+            <p className="font-bold text-[25px] paymentPrice">
+              $299.99<span className="font-medium text-[18px]">/mo</span>
             </p>
             <div className="text-[#E7F5FF] mt-12">
               <p className="py-2  flex items-baseline gap-1 text-[13px]"><IoCheckmarkCircleOutline /> Multiple generations</p>

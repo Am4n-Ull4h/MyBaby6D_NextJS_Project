@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import React, { Fragment, lazy, Suspense, useState, useEffect } from 'react';
 const UploadNav = lazy(() => import('./UploadNavbar'));
@@ -10,17 +10,14 @@ import Footer from '../Components/Footer/Footer';
 
 function UploadPage() {
     const [Upload, setUpload] = useState('');
-    const [user] = useAuthState(auth);
+    const [user, loading] = useAuthState(auth);
     const router = useRouter();
 
     useEffect(() => {
-        if (!user) {
-            router.push('/login'); // Redirect to login if no user
+        if (!loading && !user) {
+            router.push('/login'); // Redirect to login if no user and not loading
         }
-    }, [user, router]);
-    
-
-   
+    }, [user, loading, router]);
 
     const uploadImage = (e) => {
         const file = e.target.files[0];
@@ -30,6 +27,7 @@ function UploadPage() {
         }
     };
 
+    if (loading) return; // Optionally show a loading indicator
 
     return (
         <Fragment>

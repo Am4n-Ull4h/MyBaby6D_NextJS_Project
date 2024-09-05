@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
@@ -82,6 +84,9 @@ body {
 }
 .OverScroll::-webkit-scrollbar{
   display: none;
+}
+.paymentPrice{
+  font-family: 'Poppins', sans-serif;
 }
 
 

@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import React, { Fragment, useRef, useState } from "react";
+import React, { Fragment, useRef, useState, useEffect, Suspense } from "react";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
-import 'react-toastify/dist/ReactToastify.css'; // Import CSS for styling
-
+import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
+import { useAuthState } from "react-firebase-hooks/auth";
+import Navbar from "../Components/Navbar/Navbar";
 
 function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -19,73 +20,91 @@ function SignUpPage() {
   const passwordError = useRef();
   const passRePassError = useRef();
 
-  let router = useRouter();
+  const [user, loading] = useAuthState(auth);
+  const router = useRouter();
 
-  const [createUserWithEmailAndPassword] =
-    useCreateUserWithEmailAndPassword(auth);
+  useEffect(() => {
+    if (!loading && user) {
+      router.push("/"); // Redirect to home if user is logged in
+    }
+  }, [user, loading, router]);
 
   const checkRestrictions = () => {
     if (email === "" || password === "" || reEnterPassword === "") {
       fieldsError.current.style.display = "block";
     } else {
       fieldsError.current.style.display = "none";
-      if (!email.includes("@") || !email.includes(".") ) {
+      if (!email.includes("@") || !email.includes(".")) {
         emailError.current.style.display = "block";
       } else {
         emailError.current.style.display = "none";
         if (password.length < 8) {
-        passwordError.current.style.display = "block";
-        }else {
+          passwordError.current.style.display = "block";
+        } else {
           passwordError.current.style.display = "none";
-          if (password!== reEnterPassword) {
+          if (password !== reEnterPassword) {
             passRePassError.current.style.display = "block";
           } else {
             passRePassError.current.style.display = "none";
             handleSignup();
-            setTimeout(() => {
-              router.push("/login");
-            }, 2000);
-            
           }
         }
-
       }
     }
-
   };
 
   const handleSignup = async () => {
     try {
-      const user = await createUserWithEmailAndPassword(email, password);
+      await createUserWithEmailAndPassword(email, password);
       setEmail("");
       setPassword("");
       setReEnterPassword("");
 
-
       toast.success("Account successfully created!", {
         position: "top-right",
-        autoClose: 5000,  // Auto-close after 3 seconds
+        autoClose: 5000, // Auto-close after 5 seconds
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
       });
+
+      setTimeout(() => {
+        router.push("/login");
+      }, 2000);
     } catch (err) {
-      alert('Something went wrong')
+      toast.error("Something went wrong", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
     }
   };
+
+  if (loading) return; 
 
   return (
     <Fragment>
       <ToastContainer />
+
+      <Suspense fallback={null}>
+        <Navbar />
+      </Suspense>
       <div className="GradientBG2 h-[90vh] w-full flex justify-center items-center">
         <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%]  bg-[#F5F5F5] rounded-xl pb-8">
           <h1 className="text-center font-extrabold text-[#ED82B8] text-xl my-5">
             Sign up
           </h1>
 
-          <form className="w-[70%] mx-auto flex flex-col text-[#000000a1] text-[12px]" onSubmit={(e)=>e.preventDefault()}>
+          <form
+            className="w-[70%] mx-auto flex flex-col text-[#000000a1] text-[12px]"
+            onSubmit={(e) => e.preventDefault()}
+          >
             <p className="py-2 text-red-800 hidden" ref={fieldsError}>
               *Please fill all fields
             </p>
@@ -98,9 +117,10 @@ function SignUpPage() {
               onChange={(e) => setEmail(e.target.value)}
               value={email}
               autoComplete="email"
-              
             />
-            <p className="py-2 text-red-800 hidden" ref={emailError}>*Enter a valid email</p>
+            <p className="py-2 text-red-800 hidden" ref={emailError}>
+              *Enter a valid email
+            </p>
 
             <label htmlFor="Password" className="text-sm mt-5">
               Password
@@ -112,7 +132,9 @@ function SignUpPage() {
               value={password}
               autoComplete="current-password"
             />
-            <p className="py-2 text-red-800 hidden" ref={passwordError}>*Password must be greater than 8 characters</p>
+            <p className="py-2 text-red-800 hidden" ref={passwordError}>
+              *Password must be greater than 8 characters
+            </p>
 
             <label htmlFor="Password" className="text-sm mt-5">
               Re-enter Password
@@ -124,8 +146,9 @@ function SignUpPage() {
               value={reEnterPassword}
               autoComplete="current-password"
             />
-            <p className="py-2 text-red-800 hidden" ref={passRePassError}>*Password and Re-Enter password not matched</p>
-
+            <p className="py-2 text-red-800 hidden" ref={passRePassError}>
+              *Password and Re-Enter password not matched
+            </p>
 
             <button
               type="button"
@@ -136,9 +159,11 @@ function SignUpPage() {
             </button>
 
             <p className="mt-2 font-extralight text-[10px] text-[#0000004c]">
-              Already have an account? <Link href="/login" className="text-[#ED82B8]">Sign In</Link>
+              Already have an account?{" "}
+              <Link href="/login" className="text-[#ED82B8]">
+                Sign In
+              </Link>
             </p>
-
           </form>
         </div>
       </div>
