@@ -19,9 +19,10 @@ function SignUpPage() {
   const emailError = useRef();
   const passwordError = useRef();
   const passRePassError = useRef();
-
+  
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth)
 
   useEffect(() => {
     if (!loading && user) {
@@ -74,6 +75,7 @@ function SignUpPage() {
         router.push("/login");
       }, 2000);
     } catch (err) {
+      console.log(err)
       toast.error("Something went wrong", {
         position: "top-right",
         autoClose: 5000,
