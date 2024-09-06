@@ -1,15 +1,34 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { MdOutlineSegment } from "react-icons/md";
 import { MdCancelPresentation } from "react-icons/md";
+import { auth } from "@/app/firebase/config";
+import { useAuthState } from "react-firebase-hooks/auth";
+
+
+let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+let sinleName = ''
+
+for(let i = 0; i < 7; i++) {
+  sinleName += str[Math.floor(Math.random() * str.length)];
+}
+
 
 
 
 function Navbar() {
   let navigate = useRouter();
-  let pathName = usePathname();
+  // let pathName = usePathname();
   const [nav, setNav] = useState(false)
+  const [user] = useAuthState(auth);
+  const [ randomName, setRandomName ] = useState('')
+
+  useEffect(()=>{
+    setRandomName(sinleName)
+  })
+
   
 
   return (
@@ -25,7 +44,7 @@ function Navbar() {
         </div>
         <div className="sm:flex items-center hidden">
             <img src="./AuthImg.jpg" className="h-[30px] w-[30px] rounded-full" alt="" />
-            <p className="ms-3 text-[14px]">Aman Ullah</p>
+            <p className="ms-3 text-[14px]">{user.displayName || randomName}</p>
             <div className="GradientBG2 rounded-full px-4 py-1 ms-5 text-[#000000] text-[13px] font-medium">
                 50 Credits
             </div>

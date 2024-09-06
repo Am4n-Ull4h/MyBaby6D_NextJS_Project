@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
-import React, { Fragment, useRef, useState, useEffect, Suspense } from "react";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import React, { Fragment, useRef, useState, useEffect } from "react";
+import { useCreateUserWithEmailAndPassword, useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
-import { useAuthState } from "react-firebase-hooks/auth";
 import Navbar from "../Components/Navbar/Navbar";
-import { sendEmailVerification, signOut } from "firebase/auth";
+import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
 
 function SignUpPage() {
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [reEnterPassword, setReEnterPassword] = useState("");
 
@@ -21,23 +21,20 @@ function SignUpPage() {
   const passwordError = useRef();
   const passRePassError = useRef();
 
-  const [user, loading] = useAuthState(auth);
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+  const [currentUser] = useAuthState(auth); // Get the current authenticated user
   const router = useRouter();
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
 
   useEffect(() => {
-    // Only redirect if the user is logged in and not on the signup page
-    if (!loading && user) {
-      // Redirect only if the user is on the login page or home page, not signup
-      const pathname = router.pathname;
-      if (pathname !== "/signup") {
-        router.push("/");
-      }
+    // If the user is logged in, redirect them to the homepage
+    if (!loading && currentUser) {
+      router.push("/"); // Redirect to homepage or any other page you prefer
     }
-  }, [user, loading, router]);
+  }, [currentUser, loading, router]);
 
   const checkRestrictions = () => {
-    if (email === "" || password === "" || reEnterPassword === "") {
+    if (email === "" || password === "" || reEnterPassword === "" || name === "") {
       fieldsError.current.style.display = "block";
     } else {
       fieldsError.current.style.display = "none";
@@ -62,32 +59,44 @@ function SignUpPage() {
 
   const handleSignup = async () => {
     try {
+      // Create the user with email and password
       const userCredential = await createUserWithEmailAndPassword(email, password);
+      
+      if (!userCredential || !userCredential.user) {
+        throw new Error("Failed to create user.");
+      }
+
       const user = userCredential.user;
+
+      // Update profile with displayName
+      await updateProfile(user, { displayName: name });
 
       // Send verification email
       await sendEmailVerification(user);
+
+      // Sign out the user
+      await signOut(auth);
+
+      // Clear form fields
+      setName("");
+      setEmail("");
+      setPassword("");
+      setReEnterPassword("");
+
+      // Redirect to login page
+      router.push("/login");
+
       toast.success("Account created! Please verify your email.", {
         position: "top-right",
-        autoClose: 2000, // Auto-close after 2 seconds
+        autoClose: 2000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
         progress: undefined,
       });
-
-      // Sign out the user to prevent immediate login
-      await signOut(auth);
-
-      setEmail("");
-      setPassword("");
-      setReEnterPassword("");
-
-      // Redirect to login page directly after signing out
-      router.push("/login");
     } catch (err) {
-      console.log(err);
+      console.error(err);
       toast.error("Something went wrong", {
         position: "top-right",
         autoClose: 5000,
@@ -100,15 +109,12 @@ function SignUpPage() {
     }
   };
 
-  if (loading) return null;
+  if (loading) return null; // Return null or a loader while authentication state is loading
 
   return (
     <Fragment>
       <ToastContainer />
-
-      <Suspense fallback={null}>
-        <Navbar />
-      </Suspense>
+      <Navbar />
       <div className="GradientBG2 h-[90vh] w-full flex justify-center items-center">
         <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%] bg-[#F5F5F5] rounded-xl pb-8">
           <h1 className="text-center font-extrabold text-[#ED82B8] text-xl my-5">
@@ -122,6 +128,16 @@ function SignUpPage() {
             <p className="py-2 text-red-800 hidden" ref={fieldsError}>
               *Please fill all fields
             </p>
+            <label htmlFor="Name" className="text-sm">
+              Username
+            </label>
+            <input
+              type="text"
+              className="outline-none py-1 rounded ps-2 inpShadow my-2"
+              onChange={(e) => setName(e.target.value)}
+              value={name}
+              autoComplete="name"
+            />
             <label htmlFor="Email" className="text-sm">
               Email
             </label>

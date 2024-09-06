@@ -107,10 +107,11 @@ function LoginPage() {
             >
               Forgot your password?
             </Link>
+            <p className="text-[10px] font-light text-blue-400 mt-2">NOTE: Please check your email and verify account first.</p>
 
             <button
               type="submit"
-              className="mt-7 bg-[#86DEF4] rounded-lg py-1 text-white font-bold shadow"
+              className="mt-4 bg-[#86DEF4] rounded-lg py-1 text-white font-bold shadow"
               onClick={handleSignIn}
             >
               Sign In
