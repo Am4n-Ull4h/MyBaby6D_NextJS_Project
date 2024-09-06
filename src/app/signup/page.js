@@ -9,6 +9,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
 import { useAuthState } from "react-firebase-hooks/auth";
 import Navbar from "../Components/Navbar/Navbar";
+import { sendEmailVerification, signOut } from "firebase/auth";
 
 function SignUpPage() {
   const [email, setEmail] = useState("");
@@ -19,14 +20,19 @@ function SignUpPage() {
   const emailError = useRef();
   const passwordError = useRef();
   const passRePassError = useRef();
-  
+
   const [user, loading] = useAuthState(auth);
   const router = useRouter();
-  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth)
+  const [createUserWithEmailAndPassword] = useCreateUserWithEmailAndPassword(auth);
 
   useEffect(() => {
+    // Only redirect if the user is logged in and not on the signup page
     if (!loading && user) {
-      router.push("/"); // Redirect to home if user is logged in
+      // Redirect only if the user is on the login page or home page, not signup
+      const pathname = router.pathname;
+      if (pathname !== "/signup") {
+        router.push("/");
+      }
     }
   }, [user, loading, router]);
 
@@ -56,14 +62,14 @@ function SignUpPage() {
 
   const handleSignup = async () => {
     try {
-      await createUserWithEmailAndPassword(email, password);
-      setEmail("");
-      setPassword("");
-      setReEnterPassword("");
+      const userCredential = await createUserWithEmailAndPassword(email, password);
+      const user = userCredential.user;
 
-      toast.success("Account successfully created!", {
+      // Send verification email
+      await sendEmailVerification(user);
+      toast.success("Account created! Please verify your email.", {
         position: "top-right",
-        autoClose: 5000, // Auto-close after 5 seconds
+        autoClose: 2000, // Auto-close after 2 seconds
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
@@ -71,11 +77,17 @@ function SignUpPage() {
         progress: undefined,
       });
 
-      setTimeout(() => {
-        router.push("/login");
-      }, 2000);
+      // Sign out the user to prevent immediate login
+      await signOut(auth);
+
+      setEmail("");
+      setPassword("");
+      setReEnterPassword("");
+
+      // Redirect to login page directly after signing out
+      router.push("/login");
     } catch (err) {
-      console.log(err)
+      console.log(err);
       toast.error("Something went wrong", {
         position: "top-right",
         autoClose: 5000,
@@ -88,7 +100,7 @@ function SignUpPage() {
     }
   };
 
-  if (loading) return; 
+  if (loading) return null;
 
   return (
     <Fragment>
@@ -98,7 +110,7 @@ function SignUpPage() {
         <Navbar />
       </Suspense>
       <div className="GradientBG2 h-[90vh] w-full flex justify-center items-center">
-        <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%]  bg-[#F5F5F5] rounded-xl pb-8">
+        <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%] bg-[#F5F5F5] rounded-xl pb-8">
           <h1 className="text-center font-extrabold text-[#ED82B8] text-xl my-5">
             Sign up
           </h1>

@@ -15,8 +15,8 @@ export default function RootLayout({ children }) {
   let pathName = usePathname();
 
 
-  const noFooterRoutes = ["/login", "/signup", "/upload"];
-  const noNavbarRoutes = ["/upload", "/login", "/signup" ];
+  const noFooterRoutes = ["/login", "/signup", "/upload", "/reset"];
+  const noNavbarRoutes = ["/upload", "/login", "/signup", "/reset"];
 
 
 

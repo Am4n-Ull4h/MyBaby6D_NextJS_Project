@@ -6,12 +6,12 @@ import React, { Fragment, useRef, useState, useEffect, Suspense } from "react";
 import { useSignInWithEmailAndPassword, useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import Navbar from "../Components/Navbar/Navbar";
+import { sendEmailVerification, signOut } from "firebase/auth";
 
 function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const loginError = useRef();
-  // const fieldsError = useRef();
 
   const navigate = useRouter();
 
@@ -20,28 +20,43 @@ function LoginPage() {
 
   useEffect(() => {
     if (loading) return; // Do nothing while loading
-    if (user) navigate.push("/"); // Redirect if user is logged in
+    if (user && user.emailVerified) {
+      navigate.push("/"); // Redirect if user is logged in and email is verified
+    }
   }, [user, loading, navigate]);
 
   const handleSignIn = async () => {
     try {
       if (email !== "" && password !== "") {
         const res = await signInWithEmailAndPassword(email, password);
-        setEmail("");
-        setPassword("");
+        
         if (res) {
-          loginError.current.style.display = "none";
-          navigate.push("/");
+          if (res.user.emailVerified) {
+            loginError.current.style.display = "none";
+            navigate.push("/");
+          } else {
+            await signOut(auth);
+            loginError.current.innerHTML = "Please verify your email before logging in.";
+            loginError.current.style.display = "block";
+
+            // Optionally, resend verification email
+            // await sendEmailVerification(res.user);
+          }
         } else {
           loginError.current.innerHTML = "*Email & Password not matched";
           loginError.current.style.display = "block";
         }
+
+        setEmail("");
+        setPassword("");
       } else {
         loginError.current.innerHTML = "*Please fill all fields";
         loginError.current.style.display = "block";
       }
     } catch (error) {
       console.log(error);
+      loginError.current.innerHTML = "An error occurred. Please try again.";
+      loginError.current.style.display = "block";
     }
   };
 
@@ -63,9 +78,7 @@ function LoginPage() {
             <p className="py-2 text-red-800 hidden" ref={loginError}>
               *Email & Password not matched
             </p>
-            {/* <p className="py-2 text-red-800 hidden" ref={fieldsError}>
-              *Please fill all fields
-            </p> */}
+
             <label htmlFor="Email" className="text-sm">
               Email
             </label>
@@ -89,7 +102,7 @@ function LoginPage() {
             />
 
             <Link
-              href=""
+              href="/reset"
               className="mt-2 font-extralight text-[10px] text-[#0000004c]"
             >
               Forgot your password?

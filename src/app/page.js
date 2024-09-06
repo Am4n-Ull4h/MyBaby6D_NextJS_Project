@@ -1,3 +1,6 @@
+"use client"
+
+import { useRouter } from "next/navigation";
 import { Fragment, lazy, Suspense } from "react";
 const HomeBlogs = lazy(() => import("./HomeBlogs"));
 const FreqaskQuest = lazy(() => import("./FreqaskQuest"));
@@ -16,6 +19,8 @@ let tableData = [
 ];
 
 export default function Home() {
+
+  const navigate = useRouter()
   return (
     <Fragment>
       <div className="GradientBG">
@@ -35,7 +40,7 @@ export default function Home() {
             <h4 className="font-bold text-[19px] mt-8">
               Get <span className="TomatoFont">free</span> preview in 2 minutes
             </h4>
-            <button className="TomatoBG px-6 font-semibold rounded-xl mx-auto block my-3 py-3">
+            <button className="TomatoBG px-6 font-semibold rounded-xl mx-auto block my-3 py-3" onClick={()=>navigate.push('/upload')}>
               Upload 3D Ultrasound Images
             </button>
           </div>
