@@ -1,16 +1,53 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import { MdOutlineSegment } from "react-icons/md";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
-import { signOut } from "firebase/auth";
+import { auth, storage } from "@/app/firebase/config"; // Import storage from Firebase config
+import { signOut, updateProfile } from "firebase/auth";
+import { ImCancelCircle } from "react-icons/im";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage"; // Import Firebase Storage methods
+import { ProfileContext } from "../ContextApi/Context";
+
 
 function Navbar() {
+  // const [userProfilePic, setUserProfilePic] = useState("./AuthImg.jpg");
+  const [picState, setPicState] = useState(false);
+  const [nav, setNav] = useState(false);
+  const [uploading, setUploading] = useState(false); // For showing upload state
+  const [user] = useAuthState(auth); // Get the authenticated user
   const navigate = useRouter();
   const pathName = usePathname();
-  const [nav, setNav] = useState(false);
-  const [user] = useAuthState(auth); // Get the authenticated user
+
+  const {userProfilePic,setUserProfilePic } = useContext(ProfileContext);
+
+  useEffect(() => {
+    // Set user profile picture from Firebase Auth if available
+    if (user && user.photoURL) {
+      setUserProfilePic(user.photoURL);
+    }
+  }, [user]);
+
+  // Function to handle image upload
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUploading(true);
+      try {
+        const imageRef = ref(storage, `user-images/${user.uid}/profile.jpg`);
+        await uploadBytes(imageRef, file);
+        const downloadURL = await getDownloadURL(imageRef);
+
+        // Update user profile with the new image URL
+        await updateProfile(user, { photoURL: downloadURL });
+        setUserProfilePic(downloadURL); // Update the profile pic state
+        setUploading(false);
+        setPicState(false); // Close the upload box
+      } catch (error) {
+          setUploading(false);
+      }
+    }
+  };
 
   return (
     <Fragment>
@@ -73,15 +110,44 @@ function Navbar() {
         {/* Conditional rendering for Login/Signup or Logout in desktop view */}
         <div className="md:block hidden">
           {user ? (
-            <button
-              onClick={() => {signOut(auth)
-                navigate.push('/')
-              }}
-              className="text-[#F05454] text-sm"
-              type="button"
-            >
-              Logout
-            </button>
+            <div className="flex gap-4 relative">
+              <img
+                src={userProfilePic}
+                className="h-[30px] w-[30px] rounded-full cursor-pointer"
+                alt="Profile"
+                onClick={() => setPicState(!picState)}
+              />
+              <div
+                className={`${
+                  picState === true ? "block" : "hidden"
+                } bg-[#121212] p-2 text-nowrap absolute text-[12px] rounded-xl top-[30px] -left-8 pt-9`}
+              >
+                <ImCancelCircle
+                  onClick={() => setPicState(false)}
+                  className="cursor-pointer absolute top-2 right-3"
+                />
+                <label className="cursor-pointer">
+                  Upload Profile
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </label>
+                {uploading && <p>Uploading...</p>}
+              </div>
+              <button
+                onClick={() => {
+                  signOut(auth);
+                  navigate.push("/");
+                }}
+                className="text-[#F05454] text-sm"
+                type="button"
+              >
+                Logout
+              </button>
+            </div>
           ) : (
             <>
               <Link
@@ -161,8 +227,9 @@ function Navbar() {
               {user ? (
                 <button
                   className="text-[#F05454] text-sm"
-                  onClick={() => {signOut(auth)
-                    navigate.push('/')
+                  onClick={() => {
+                    signOut(auth);
+                    navigate.push("/");
                   }}
                   type="button"
                 >

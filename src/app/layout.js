@@ -4,6 +4,7 @@ import { Raleway } from "next/font/google";
 import "./globals.css";
 import { usePathname } from "next/navigation";
 import { lazy, Suspense } from "react";
+import { Context } from "./Components/ContextApi/Context";
 
 
 const Navbar = lazy(() => import("./Components/Navbar/Navbar"));
@@ -38,10 +39,11 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         <Suspense fallback={null}>
           
+          <Context>
           {!noNavbarRoutes.includes(pathName) && <Navbar />}
-
           {children}
           {!noFooterRoutes.includes(pathName) && <Footer />}
+          </Context>
         </Suspense>
       </body>
     </html>
