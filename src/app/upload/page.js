@@ -145,9 +145,7 @@ function UploadPage() {
                     </div>
                 </div>
             </div>
-            <Suspense fallback={null}>
-                <Footer />
-            </Suspense>
+            
         </Fragment>
     );
 }
