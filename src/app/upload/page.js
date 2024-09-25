@@ -89,7 +89,7 @@ function UploadPage() {
         return await getDownloadURL(storageRef);  // Get and return the URL of the uploaded image
     };
 
-    if (loading) return <p className='h-screen w-full flex justify-center items-center text-2xl font-bold'>Please wait...</p>; 
+    if (loading) return <p className='h-[90vh] w-full flex justify-center items-center text-2xl font-bold'>Please wait...</p>; 
 
     return (
         <Fragment>
