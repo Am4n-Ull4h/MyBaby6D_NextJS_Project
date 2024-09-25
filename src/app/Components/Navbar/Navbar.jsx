@@ -19,7 +19,7 @@ function Navbar() {
   const navigate = useRouter();
   const pathName = usePathname();
 
-  const {userProfilePic,setUserProfilePic } = useContext(ProfileContext);
+  const [ userProfilePic, setUserProfilePic ] = useState('./user.png');
 
   useEffect(() => {
     // Set user profile picture from Firebase Auth if available

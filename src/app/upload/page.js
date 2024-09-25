@@ -3,9 +3,8 @@
 import React, { Fragment, lazy, Suspense, useState, useEffect } from 'react';
 import { TbCloudUpload } from "react-icons/tb";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
-import axios from 'axios'; 
-import Footer from '../Components/Footer/Footer';
+import { auth, storage } from "@/app/firebase/config"; // Ensure Firebase storage is imported here
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from 'next/navigation';
 
 const UploadNav = lazy(() => import('./UploadNavbar'));
@@ -23,6 +22,7 @@ function UploadPage() {
             router.push('/login'); 
         }
     }, [user, loading, router]);
+    
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -41,30 +41,35 @@ function UploadPage() {
     
         try {
             setLoadingState(true); 
-    
-            const imageBase64 = await imageToBase64(imageFile);
-    
+
+            // Step 1: Upload the image to Firebase storage and get the URL
+            const imageUrl = await uploadImageToFirebase(imageFile);
+
+            // Step 2: Prepare the request body with the URL
             const requestBody = {
                 "input": {
-                    "style": "CCW", 
-                    "input_image": imageBase64,
-                    "prompt": "Your prompt here" 
+                    "edit_type": "BabyGen",
+                    "input_image": imageUrl,  // Use the URL of the uploaded image
+                    "prompt": "realistic closeup of a new born baby face high resolution, 4k",
+                    "width": 1024,
+                    "height": 1024,
+                    "strength": 0.65
                 }
             };
 
-    
-            const response = await fetch('https://api.runpod.ai/v2/5rh3zabvo843fm/runsync', {
+            // Step 3: Call the API with the image URL
+            const response = await fetch('https://api.runpod.ai/v2/4v3cghj5vffar4/runsync', {
                 method: 'POST',
                 headers: {
-                    'Authorization': `Bearer X03I6QTRHATY2JLYX5JYR3ZL8LW010MV8PWMWCKK`, 
-                    'Content-Type': 'application/json' 
+                    'Authorization': `Bearer KE8GCEKLK9W2K4FHOECK9GC4SWEZ554Y5DFDF5FG`,  // Replace with your real API key
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(requestBody),
             });
     
             if (response.ok) {
                 const data = await response.json();
-                setModifiedImageUrl(data.modifiedImageUrl); 
+                setModifiedImageUrl(data.output);  // Assuming data.output contains the modified image URL
             } else {
                 console.error('Error uploading the image:', response);
                 setError('Failed to upload the image. Please try again.');
@@ -76,18 +81,13 @@ function UploadPage() {
             setLoadingState(false); 
         }
     };
-    
-    const imageToBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onloadend = () => {
-                resolve(reader.result.split(',')[1]); 
-            };
-            reader.onerror = (error) => reject(error);
-        });
+
+    // Function to upload image to Firebase storage and return the URL
+    const uploadImageToFirebase = async (file) => {
+        const storageRef = ref(storage, `images/${file.name}`);
+        await uploadBytes(storageRef, file);
+        return await getDownloadURL(storageRef);  // Get and return the URL of the uploaded image
     };
-    
 
     if (loading) return <p className='h-screen w-full flex justify-center items-center text-2xl font-bold'>Please wait...</p>; 
 
@@ -107,7 +107,6 @@ function UploadPage() {
                                 <p>CHOOSE SCAN</p>
                             </div>
                         ) : (
-                            // <p className='text-center'>Image selected: {imageFile.name}</p>
                             <img src={URL.createObjectURL(imageFile)} alt='Img' className=' h-full w-full ' />
                         )}
                         <input
@@ -115,13 +114,13 @@ function UploadPage() {
                             className='z-10 cursor-pointer opacity-0 rounded-lg absolute h-full w-full'
                             id="upload"
                             onChange={handleImageChange}
-                            accept="image/*" // Accept image files only
+                            accept="image/*"
                         />
                     </div>
                     <button
                         className='rounded-md shadow py-1 px-3 bg-[#86DEF4] mt-12'
-                        onClick={uploadImageToApi} // Trigger the image upload function
-                        disabled={!imageFile || loadingState} // Disable button if no image or loading
+                        onClick={uploadImageToApi}
+                        disabled={!imageFile || loadingState}
                     >
                         {loadingState ? 'Generating...' : 'Generate'}
                     </button>
@@ -132,20 +131,19 @@ function UploadPage() {
                     <h1 className='text-[#ED82B8] mt-7 font-bold text-[18px]'>Results</h1>
                     <div className='w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[45vh] flex justify-center items-center'>
                         {loadingState ? (
-                            <p>Loading...</p> // Show loading text while fetching data
+                            <p>Loading...</p> 
                         ) : error ? (
-                            <p className="text-red-500">{error}</p> // Show error message if exists
+                            <p className="text-red-500">{error}</p>
                         ) : (
                             modifiedImageUrl ? (
                                 <img src={modifiedImageUrl} alt="Modified" className='h-full w-full rounded-2xl' />
                             ) : (
-                                <p>No image generated yet</p> // Placeholder text if no image
+                                <p>No image generated yet</p>
                             )
                         )}
                     </div>
                 </div>
             </div>
-            
         </Fragment>
     );
 }

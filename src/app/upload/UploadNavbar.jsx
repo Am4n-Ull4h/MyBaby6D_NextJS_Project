@@ -9,13 +9,6 @@ import { ProfileContext } from "../Components/ContextApi/Context";
 
 
 
-let str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-
-let sinleName = ''
-
-for(let i = 0; i < 7; i++) {
-  sinleName += str[Math.floor(Math.random() * str.length)];
-}
 
 
 
@@ -23,17 +16,20 @@ for(let i = 0; i < 7; i++) {
 function Navbar() {
 
 
-  const { userProfilePic } = useContext(ProfileContext);
+  const [ userProfilePic, setUserProfilePic ] = useState('./user.png');
   let navigate = useRouter();
   // let pathName = usePathname();
   const [nav, setNav] = useState(false)
   const [user] = useAuthState(auth);
   const [ randomName, setRandomName ] = useState('')
 
-  useEffect(()=>{
-    setRandomName(sinleName)
-  })
 
+  useEffect(() => {
+    // Set user profile picture from Firebase Auth if available
+    if (user && user.photoURL) {
+      setUserProfilePic(user.photoURL);
+    }
+  }, [user]);
   
 
   return (
