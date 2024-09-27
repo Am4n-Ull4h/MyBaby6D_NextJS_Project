@@ -3,10 +3,13 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-const { user } = useAuthState(auth);  // Assuming Firebase authentication
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config"; // Adjust the path based on your project structure
+
 
 
 const CheckoutButton = ({ amount }) => {
+  const { user } = useAuthState(auth);  // Assuming Firebase authentication
   const router = useRouter();
 
   const handleCheckout = async () => {
