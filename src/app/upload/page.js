@@ -6,6 +6,9 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth, storage } from "@/app/firebase/config"; // Ensure Firebase storage is imported here
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { useRouter } from 'next/navigation';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
+import { deductCredit } from "@/app/firebase/DeductCredit";  // Import the deductCredit function
 
 const UploadNav = lazy(() => import('./UploadNavbar'));
 
@@ -22,7 +25,6 @@ function UploadPage() {
             router.push('/login'); 
         }
     }, [user, loading, router]);
-    
 
     const handleImageChange = (e) => {
         const file = e.target.files[0];
@@ -38,9 +40,25 @@ function UploadPage() {
             alert('Please select an image to upload.');
             return;
         }
-    
+
         try {
             setLoadingState(true); 
+
+            // Check if the user has enough credits
+            const hasCredits = await deductCredit(user.uid);
+            if (!hasCredits) {
+                toast.error("Please purchase credits", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
+                setLoadingState(false);
+                return;
+            }
 
             // Step 1: Upload the image to Firebase storage and get the URL
             const imageUrl = await uploadImageToFirebase(imageFile);
@@ -66,16 +84,15 @@ function UploadPage() {
                 },
                 body: JSON.stringify(requestBody),
             });
-    
+            setImageFile(null)
+
             if (response.ok) {
                 const data = await response.json();
                 setModifiedImageUrl(data.output);  // Assuming data.output contains the modified image URL
             } else {
-                console.error('Error uploading the image:', response);
                 setError('Failed to upload the image. Please try again.');
             }
         } catch (error) {
-            console.error('Error uploading the image:', error);
             setError('Failed to upload the image. Please try again.'); 
         } finally {
             setLoadingState(false); 
@@ -96,6 +113,7 @@ function UploadPage() {
             <Suspense fallback={null}>
                 <UploadNav />
             </Suspense>
+      <ToastContainer />
             <div className='GradientBG3 sm:h-[90vh] w-full flex sm:flex-row flex-col items-center justify-around'>
                 {/* Upload Section */}
                 <div className='rounded-xl bg-[#F5F5F5] xl:w-[15%] lg:w-[20%] md:w-[26%] sm:w-[32%] w-[50%] sm:mt-0 mt-8 flex items-center py-8 flex-col'>

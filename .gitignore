@@ -6,6 +6,9 @@
 .pnp.js
 .yarn/install-state.gz
 
+
+/config/firebase-adminsdk.json
+/firebase-adminsdk.json
 # testing
 /coverage
 

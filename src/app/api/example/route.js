@@ -1,11 +1,12 @@
+// /pages/api/example.js
+
 import Stripe from 'stripe';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 
 export async function POST(req) {
     
-    console.log(process.env.STRIPE_SECRET_KEY); 
-  const { amount } = await req.json(); // Get amount from request body
+  const { amount, uid } = await req.json();  // Include uid in the request body
 
   try {
     const session = await stripe.checkout.sessions.create({
@@ -16,13 +17,14 @@ export async function POST(req) {
           product_data: {
             name: 'Credits',
           },
-          unit_amount: amount, // Amount should be in cents
+          unit_amount: amount,
         },
         quantity: 1,
       }],
       mode: 'payment',
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/payment`,
+      metadata: { uid },  // Pass the user ID here
     });
 
     return new Response(JSON.stringify({ url: session.url }), { status: 200 });

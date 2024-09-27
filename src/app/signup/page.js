@@ -9,12 +9,14 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
 import Navbar from "../Components/Navbar/Navbar";
 import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
+import { addUserToDatabase } from "../firebase/addUserToDatabase"
 
 function SignUpPage() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [reEnterPassword, setReEnterPassword] = useState("");
+  const [ emailUse, setEmailUse ] = useState(false);
 
   const fieldsError = useRef();
   const emailError = useRef();
@@ -26,12 +28,12 @@ function SignUpPage() {
   const [currentUser] = useAuthState(auth); // Get the current authenticated user
   const router = useRouter();
 
-  useEffect(() => {
-    // If the user is logged in, redirect them to the homepage
-    if (!loading && currentUser) {
-      router.push("/"); // Redirect to homepage or any other page you prefer
-    }
-  }, [currentUser, loading, router]);
+  // useEffect(() => {
+  //   // If the user is logged in, redirect them to the homepage
+  //   if (!loading && currentUser) {
+  //     router.push("/"); // Redirect to homepage or any other page you prefer
+  //   }
+  // }, [currentUser, loading, router]);
 
   const checkRestrictions = () => {
     if (email === "" || password === "" || reEnterPassword === "" || name === "") {
@@ -63,10 +65,15 @@ function SignUpPage() {
       const userCredential = await createUserWithEmailAndPassword(email, password);
       
       if (!userCredential || !userCredential.user) {
-        throw new Error("Failed to create user.");
+        setEmailUse(true)
+      }else{
+        setEmailUse(false)
       }
 
+
       const user = userCredential.user;
+      await addUserToDatabase(user.uid);
+
 
       // Update profile with displayName
       await updateProfile(user, { displayName: name });
@@ -84,7 +91,7 @@ function SignUpPage() {
       setReEnterPassword("");
 
       // Redirect to login page
-      router.push("/login");
+      // router.push("/login");
 
       toast.success("Account created! Please verify your email.", {
         position: "top-right",
@@ -96,7 +103,6 @@ function SignUpPage() {
         progress: undefined,
       });
     } catch (err) {
-      console.error(err);
       toast.error("Something went wrong", {
         position: "top-right",
         autoClose: 5000,
@@ -109,7 +115,7 @@ function SignUpPage() {
     }
   };
 
-  if (loading) return null; // Return null or a loader while authentication state is loading
+  if (loading) return <p className='h-[90vh] w-full flex justify-center items-center text-2xl font-bold'>Please wait...</p>; // Return null or a loader while authentication state is loading
 
   return (
     <Fragment>
@@ -148,6 +154,9 @@ function SignUpPage() {
               value={email}
               autoComplete="email"
             />
+            {
+              emailUse && <p className="text-red-800">Email is already in use.</p>
+            }
             <p className="py-2 text-red-800 hidden" ref={emailError}>
               *Enter a valid email
             </p>

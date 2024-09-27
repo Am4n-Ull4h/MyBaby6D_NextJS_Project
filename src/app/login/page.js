@@ -107,7 +107,7 @@ function LoginPage() {
             >
               Forgot your password?
             </Link>
-            <p className="text-[10px] font-light text-blue-400 mt-2">NOTE: Please check your email and verify account first.</p>
+            {/* <p className="text-[10px] font-light text-blue-400 mt-2">NOTE: Please check your email and verify account first.</p> */}
 
             <button
               type="submit"
