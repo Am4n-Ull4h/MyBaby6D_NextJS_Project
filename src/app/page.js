@@ -23,7 +23,7 @@ export default function Home() {
   const navigate = useRouter()
   return (
     <Fragment>
-      <div className="GradientBG">
+      <div className="GradientBG ">
         <div className=" text-[#121212]">
           <div className="text-center">
             <h1 className="lg:text-[60px] md:text-[48px] sm:text-[40px] text-[25px] font-bold pt-12">

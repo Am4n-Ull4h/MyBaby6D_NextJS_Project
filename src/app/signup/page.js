@@ -120,7 +120,7 @@ function SignUpPage() {
   return (
     <Fragment>
       <ToastContainer />
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="GradientBG2 h-[90vh] w-full flex justify-center items-center">
         <div className="lg:w-[30%] md:w-[40%] sm:w-[50%] w-[70%] bg-[#F5F5F5] rounded-xl pb-8">
           <h1 className="text-center font-extrabold text-[#ED82B8] text-xl my-5">

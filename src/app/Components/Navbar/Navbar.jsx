@@ -1,34 +1,32 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { Fragment, useEffect, useState, useContext } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { MdOutlineSegment } from "react-icons/md";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth, storage } from "@/app/firebase/config"; // Import storage from Firebase config
+import { auth, storage } from "@/app/firebase/config";
 import { signOut, updateProfile } from "firebase/auth";
 import { ImCancelCircle } from "react-icons/im";
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage"; // Import Firebase Storage methods
-import { ProfileContext } from "../ContextApi/Context";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 
 
 function Navbar() {
-  // const [userProfilePic, setUserProfilePic] = useState("./AuthImg.jpg");
   const [picState, setPicState] = useState(false);
   const [nav, setNav] = useState(false);
-  const [uploading, setUploading] = useState(false); // For showing upload state
-  const [user] = useAuthState(auth); // Get the authenticated user
+  const [uploading, setUploading] = useState(false);
+  const [user] = useAuthState(auth);
   const navigate = useRouter();
   const pathName = usePathname();
 
-  const [ userProfilePic, setUserProfilePic ] = useState('./user.png');
+  const [userProfilePic, setUserProfilePic] = useState('./user.png');
 
   useEffect(() => {
-    // Set user profile picture from Firebase Auth if available
     if (user && user.photoURL) {
       setUserProfilePic(user.photoURL);
     }
+
+    
   }, [user]);
 
-  // Function to handle image upload
   const handleImageUpload = async (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -37,14 +35,12 @@ function Navbar() {
         const imageRef = ref(storage, `user-images/${user.uid}/profile.jpg`);
         await uploadBytes(imageRef, file);
         const downloadURL = await getDownloadURL(imageRef);
-
-        // Update user profile with the new image URL
         await updateProfile(user, { photoURL: downloadURL });
-        setUserProfilePic(downloadURL); // Update the profile pic state
+        setUserProfilePic(downloadURL);
         setUploading(false);
-        setPicState(false); // Close the upload box
+        setPicState(false);
       } catch (error) {
-          setUploading(false);
+        setUploading(false);
       }
     }
   };
@@ -61,14 +57,14 @@ function Navbar() {
           />
         </div>
 
+        
+
         {/* Desktop navigation */}
         <ul className="md:flex hidden justify-between lg:w-[25%] md:w-[35%] Navbarr">
           <li>
             <Link
               href="/"
-              className={`${
-                pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"
-              } text-sm hover:text-[#F05454]`}
+              className={`${pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
             >
               Home
             </Link>
@@ -76,9 +72,7 @@ function Navbar() {
           <li>
             <Link
               href="/blog"
-              className={`${
-                pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"
-              } text-sm hover:text-[#F05454]`}
+              className={`${pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
             >
               Blog
             </Link>
@@ -86,11 +80,7 @@ function Navbar() {
           <li>
             <Link
               href="/affiliate"
-              className={`${
-                pathName === "/affiliate"
-                  ? "text-[#F05454]"
-                  : "text-[#F5F5F5] text-sm hover:text-[#F05454]"
-              }`}
+              className={`${pathName === "/affiliate" ? "text-[#F05454]" : "text-[#F5F5F5] text-sm hover:text-[#F05454]"}`}
             >
               Affiliate
             </Link>
@@ -98,9 +88,7 @@ function Navbar() {
           <li>
             <Link
               href="/contact"
-              className={`${
-                pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"
-              } text-sm hover:text-[#F05454]`}
+              className={`${pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
             >
               Contact Us
             </Link>
@@ -118,9 +106,7 @@ function Navbar() {
                 onClick={() => setPicState(!picState)}
               />
               <div
-                className={`${
-                  picState === true ? "block" : "hidden"
-                } bg-[#121212] p-2 text-nowrap absolute text-[12px] rounded-xl top-[30px] -left-8 pt-9`}
+                className={`${picState ? "block" : "hidden"} bg-[#121212] p-2 text-nowrap absolute text-[12px] rounded-xl top-[30px] -left-8 pt-9`}
               >
                 <ImCancelCircle
                   onClick={() => setPicState(false)}
@@ -143,17 +129,13 @@ function Navbar() {
                   navigate.push("/");
                 }}
                 className="text-[#F05454] text-sm"
-                type="button"
               >
                 Logout
               </button>
             </div>
           ) : (
             <>
-              <Link
-                href="/login"
-                className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]"
-              >
+              <Link href="/login" className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]">
                 Login
               </Link>
               <Link href="/signup" className="text-[#F05454] text-sm">
@@ -171,17 +153,13 @@ function Navbar() {
             aria-label="Toggle Navigation"
           />
           <div
-            className={`${
-              nav === false ? "hidden" : "block"
-            } md:hidden  absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}
+            className={`${nav === false ? "hidden" : "block"} md:hidden absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}
           >
             <ul className="Navbarr" onClick={() => setNav(false)}>
               <li className="my-2">
                 <Link
                   href="/"
-                  className={`${
-                    pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"
-                  } text-sm hover:text-[#F05454] py-2 `}
+                  className={`${pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454] py-2 `}
                 >
                   Home
                 </Link>
@@ -189,9 +167,7 @@ function Navbar() {
               <li className="my-2">
                 <Link
                   href="/blog"
-                  className={`${
-                    pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"
-                  } text-sm hover:text-[#F05454]`}
+                  className={`${pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
                 >
                   Blog
                 </Link>
@@ -199,11 +175,7 @@ function Navbar() {
               <li className="my-2">
                 <Link
                   href="/affiliate"
-                  className={`${
-                    pathName === "/affiliate"
-                      ? "text-[#F05454]"
-                      : "text-[#F5F5F5] text-sm hover:text-[#F05454]"
-                  }`}
+                  className={`${pathName === "/affiliate" ? "text-[#F05454]" : "text-[#F5F5F5] text-sm hover:text-[#F05454]"}`}
                 >
                   Affiliate
                 </Link>
@@ -211,44 +183,38 @@ function Navbar() {
               <li className="my-2">
                 <Link
                   href="/contact"
-                  className={`${
-                    pathName === "/contact"
-                      ? "text-[#F05454] "
-                      : "text-[#F5F5F5]"
-                  } text-sm hover:text-[#F05454]`}
+                  className={`${pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
                 >
-                  Contact
+                  Contact Us
                 </Link>
               </li>
-            </ul>
-
-            {/* Conditional rendering for Login/Signup or Logout in mobile menu */}
-            <div className="block" onClick={() => setNav(false)}>
               {user ? (
-                <button
-                  className="text-[#F05454] text-sm"
-                  onClick={() => {
-                    signOut(auth);
-                    navigate.push("/");
-                  }}
-                  type="button"
-                >
-                  Logout
-                </button>
+                <li className="my-2">
+                  <button
+                    onClick={() => {
+                      signOut(auth);
+                      navigate.push("/");
+                    }}
+                    className="text-[#F05454] text-sm"
+                  >
+                    Logout
+                  </button>
+                </li>
               ) : (
                 <>
-                  <Link
-                    href="/login"
-                    className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]"
-                  >
-                    Login
-                  </Link>
-                  <Link href="/signup" className="text-[#F05454] text-sm">
-                    Signup
-                  </Link>
+                  <li className="my-2">
+                    <Link href="/login" className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]">
+                      Login
+                    </Link>
+                  </li>
+                  <li className="my-2">
+                    <Link href="/signup" className="text-[#F05454] text-sm">
+                      Signup
+                    </Link>
+                  </li>
                 </>
               )}
-            </div>
+            </ul>
           </div>
         </div>
       </nav>
