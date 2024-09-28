@@ -59,9 +59,9 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
         {/* Language switcher */}
         <div className="absolute text-center  right-3 top-[12vh]">
-            <p>Language</p>
-        <div id="google_translate_element" className="text-[#F5F5F5]"></div>
-            <CiGlobe className="text-white block mx-auto"/>
+            <p className="text-black">Language</p>
+        <div id="google_translate_element" ></div>
+            <CiGlobe className="text-black block mx-auto"/>
 
         </div>
         <Suspense fallback={null}>

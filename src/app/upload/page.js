@@ -10,6 +10,7 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
 import { deductCredit } from "@/app/firebase/DeductCredit";  // Import the deductCredit function
 
+
 const UploadNav = lazy(() => import('./UploadNavbar'));
 
 function UploadPage() {
@@ -47,17 +48,22 @@ function UploadPage() {
             // Check if the user has enough credits
             const hasCredits = await deductCredit(user.uid);
             if (!hasCredits) {
-                toast.error("Please purchase credits", {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                  });
+                // toast.error("Please purchase credits", {
+                //     position: "top-right",
+                //     autoClose: 5000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true,
+                //     draggable: true,
+                //     progress: undefined,
+                //   });
                 setLoadingState(false);
-                return;
+
+                setTimeout(() => {
+                 router.push('/payment'); 
+                    
+                }, 4000);
+                // return;
             }
 
             // Step 1: Upload the image to Firebase storage and get the URL

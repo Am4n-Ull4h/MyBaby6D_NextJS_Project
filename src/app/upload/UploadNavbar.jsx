@@ -6,6 +6,8 @@ import { MdCancelPresentation } from "react-icons/md";
 import { auth } from "@/app/firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { getDatabase, ref, onValue } from "firebase/database"; // Import Realtime Database methods
+import { IoIosAddCircleOutline } from "react-icons/io";
+
 
 function Navbar() {
   const [userProfilePic, setUserProfilePic] = useState('./user.png');
@@ -44,11 +46,12 @@ function Navbar() {
             alt=""
           />
         </div>
+        {/* <Link href='/' className="ms-1" >Home</Link> */}
         <div className="sm:flex items-center hidden">
           <img src={userProfilePic} className="h-[30px] w-[30px] rounded-full" alt="" />
           <p className="ms-3 text-[14px]">{user?.displayName || randomName}</p>
-          <div className="GradientBG2 rounded-full px-4 py-1 ms-5 text-[#000000] text-[13px] font-medium">
-            {credits} Credits
+          <div className="GradientBG2 rounded-full px-4 py-1 ms-5 text-[#000000] text-[13px] font-medium flex items-center">
+            {credits} Credits <Link href='/payment' className="ms-1" ><IoIosAddCircleOutline /></Link>
           </div>
         </div>
 
