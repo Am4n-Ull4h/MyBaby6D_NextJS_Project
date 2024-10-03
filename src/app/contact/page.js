@@ -29,11 +29,6 @@ function ContactPage() {
             <label htmlFor="Message" className="text-sm mt-5">
               Message
             </label>
-            <input
-              type="password"
-              className="outline-none py-1 rounded ps-2 inpShadow"
-              autoComplete="current-password"
-              />
             <textarea name="" id="" 
               className="outline-none py-1 rounded ps-2 h-[25vh] inpShadow"
               onChange={(e) => setMessage(e.target.value)}

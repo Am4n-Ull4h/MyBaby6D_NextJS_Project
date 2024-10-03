@@ -162,20 +162,22 @@ function UploadPage() {
 
           <div className="flex w-[90%] items-center justify-between my-2 mt-7">
             <label htmlFor="" className="text-black text-[12px]">
-              Select Hair
+              Select Ethnicity
             </label>
             <select
               name=""
               id=""
+              defaultValue='indian'
               onChange={(e) => setEthnicity(e.target.value)}
               className="text-black border-b-2 border-black bg-transparent outline-none text-[12px]"
             >
               <option value="">None</option>
-              <option value="indian" selected>indian</option>
-              <option value="asian">asian</option>
-              <option value="hispanic">hispanic</option>
-              <option value="american">american</option>
-              <option value="indonesian">indonesian</option>
+              <option value="indian">Indian</option>
+              <option value="asian">Asian</option>
+              <option value="hispanic">Hispanic</option>
+              <option value="white">White</option>
+              <option value="black">Black</option>
+              <option value="indonesian">Indonesian</option>
             </select>
           </div>
           <div className="flex w-[90%] items-center justify-between my-2">
@@ -185,12 +187,13 @@ function UploadPage() {
             <select
               name=""
               id=""
+              defaultValue='red'
               onChange={(e) => setHair(e.target.value)}
               className="text-black border-b-2 border-black bg-transparent outline-none text-[12px]"
             >
               <option value="">None</option>
               <option value="black">Black</option>
-              <option value="red" selected>Red</option>
+              <option value="red">Red</option>
               <option value="blonde">Blonde</option>
               <option value="grey">Grey</option>
               <option value="white">White</option>
@@ -198,11 +201,12 @@ function UploadPage() {
           </div>
           <div className="flex w-[90%] items-center justify-between my-2">
             <label htmlFor="" className="text-black text-[12px]">
-              Select hair color:
+              Select eyes:
             </label>
             <select
               name=""
               id=""
+              defaultValue='hazel'
               onChange={(e) => setEye(e.target.value)}
               className="text-black border-b-2 border-black bg-transparent outline-none text-[12px]"
             >
@@ -210,7 +214,7 @@ function UploadPage() {
               <option value="brown">Brown</option>
               <option value="amber">Amber</option>
               <option value="blue">Blue</option>
-              <option value="hazel" selected>Hazel</option>
+              <option value="hazel" defaultValue>Hazel</option>
             </select>
           </div>
           <button
@@ -225,7 +229,7 @@ function UploadPage() {
         {/* Results Section */}
         <div className="rounded-xl bg-[#F5F5F5] xl:w-[50%] lg:w-[55%] sm:w-[62%] w-[90%] sm:my-0 my-8 flex items-center py-3 flex-col">
           <h1 className="text-[#ED82B8] mt-7 font-bold text-[18px]">Results</h1>
-          <div className="w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[45vh] flex justify-center items-center">
+          <div className="w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[55vh] flex justify-center items-center">
             {loadingState ? (
               <p>Loading...</p>
             ) : error ? (
