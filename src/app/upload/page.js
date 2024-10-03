@@ -81,12 +81,15 @@ function UploadPage() {
           width: 1024,
           height: 1024,
           strength: 0.65,
+          ethnicity: ethnicity,
+          hair_color: hair,
+          eye_color: eye,
         },
       };
 
       // Step 3: Call the API with the image URL
       const response = await fetch(
-        "https://api.runpod.ai/v2/4v3cghj5vffar4/runsync",
+        "https://api.runpod.ai/v2/94i5sz9kagyg2t/runsync",
         {
           method: "POST",
           headers: {
@@ -168,7 +171,7 @@ function UploadPage() {
               className="text-black border-b-2 border-black bg-transparent outline-none text-[12px]"
             >
               <option value="">None</option>
-              <option value="indian">indian</option>
+              <option value="indian" selected>indian</option>
               <option value="asian">asian</option>
               <option value="hispanic">hispanic</option>
               <option value="american">american</option>
@@ -187,7 +190,7 @@ function UploadPage() {
             >
               <option value="">None</option>
               <option value="black">Black</option>
-              <option value="red">Red</option>
+              <option value="red" selected>Red</option>
               <option value="blonde">Blonde</option>
               <option value="grey">Grey</option>
               <option value="white">White</option>
@@ -207,7 +210,7 @@ function UploadPage() {
               <option value="brown">Brown</option>
               <option value="amber">Amber</option>
               <option value="blue">Blue</option>
-              <option value="hazel">Hazel</option>
+              <option value="hazel" selected>Hazel</option>
             </select>
           </div>
           <button

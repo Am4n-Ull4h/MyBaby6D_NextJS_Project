@@ -47,7 +47,6 @@ export async function POST(req) {
       return new Response('UID not found', { status: 400 });
     }
 
-    console.log('Amount:', amount, 'UID:', uid);
     let creditsToAdd = 0;
 
     // Determine how many credits to add based on the amount
@@ -57,13 +56,35 @@ export async function POST(req) {
       creditsToAdd = 10;
     }
 
-    // Update credits in the database
-    if (creditsToAdd > 0) {
-      const userRef = db.ref(`users/${uid}/credits`); // Use db.ref to get a reference to the user's credits
-      await userRef.transaction((currentCredits) => {
-        return (currentCredits || 0) + creditsToAdd; // Increment the current credits
-      });
-    }
+    // Check if the session has already been processed (atomic check)
+    const sessionRef = db.ref(`sessions/${session.id}`);
+
+    // Use a transaction to check if session was processed and if not, process it atomically
+    await sessionRef.transaction((currentData) => {
+      if (currentData === null) {
+        // If session doesn't exist, mark it as processed and proceed
+        return { processed: true };
+      }
+      // If session already exists (was processed), abort the transaction
+      return;
+    }, async (error, committed, snapshot) => {
+      if (error) {
+        return new Response('Transaction failed', { status: 500 });
+      }
+
+      if (!committed) {
+        // Session already processed
+        return new Response('Session already processed', { status: 200 });
+      }
+
+      // Update credits in the database if the transaction was successful and session was not already processed
+      if (creditsToAdd > 0) {
+        const userRef = db.ref(`users/${uid}/credits`); // Use db.ref to get a reference to the user's credits
+        await userRef.transaction((currentCredits) => {
+          return (currentCredits || 0) + creditsToAdd; // Increment the current credits
+        });
+      }
+    });
   }
 
   // Respond with a 200 status to acknowledge receipt of the event

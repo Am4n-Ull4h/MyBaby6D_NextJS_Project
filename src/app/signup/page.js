@@ -4,10 +4,8 @@ import Link from "next/link";
 import React, { Fragment, useRef, useState, useEffect } from "react";
 import { useCreateUserWithEmailAndPassword, useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
-import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css"; // Import CSS for styling
-import Navbar from "../Components/Navbar/Navbar";
 import { sendEmailVerification, signOut, updateProfile } from "firebase/auth";
 import { addUserToDatabase } from "../firebase/addUserToDatabase"
 
@@ -25,8 +23,6 @@ function SignUpPage() {
 
   const [createUserWithEmailAndPassword, user, loading, error] =
     useCreateUserWithEmailAndPassword(auth);
-  const [currentUser] = useAuthState(auth); // Get the current authenticated user
-  const router = useRouter();
 
   // useEffect(() => {
   //   // If the user is logged in, redirect them to the homepage
