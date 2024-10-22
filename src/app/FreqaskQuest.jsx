@@ -4,28 +4,33 @@ import React, { Fragment } from 'react'
 
 let FAQsData = [
     {
-        quest : 'How does this compare to traditional methods like 8K, RealView, or manual AI processing?',
-        ans : ['The results resemble actual photographs.', 'The processing is automated and only takes about 2 minutes - parents appreciate receiving their enhanced results immediately after their ultrasound.', 'The fee is per baby, not per ultrasound. So, you can process multiple 3D ultrasounds of the same baby at once and get numerous enhanced results for one price.', 'You can download transformation video for free. It can include your studio logo – great for social media.']
+        quest : 'How does the app enhance prenatal ultrasounds?',
+        ans : 'The app uses artificial intelligence to improve the visual quality of ultrasounds by providing clearer, sharper, and more detailed images, allowing parents to better see their future baby.'
         
     },
     {
-        quest : 'Try Photorealistic Ultrasound for free?',
-        ans : ['The results resemble actual photographs.', 'The processing is automated and only takes about 2 minutes - parents appreciate receiving their enhanced results immediately after their ultrasound.', 'The fee is per baby, not per ultrasound. So, you can process multiple 3D ultrasounds of the same baby at once and get numerous enhanced results for one price.', 'You can download transformation video for free. It can include your studio logo – great for social media.']
+        quest : 'Can the app diagnose medical issues?',
+        ans : 'No, the app is not intended for medical use and does not provide any diagnostics. Its purpose is purely to enhance the quality of ultrasound images for personal or aesthetic purposes.'
         
     },
     {
-        quest : 'Special prices or discounts for studios?',
-        ans : ['The results resemble actual photographs.', 'The processing is automated and only takes about 2 minutes - parents appreciate receiving their enhanced results immediately after their ultrasound.', 'The fee is per baby, not per ultrasound. So, you can process multiple 3D ultrasounds of the same baby at once and get numerous enhanced results for one price.', 'You can download transformation video for free. It can include your studio logo – great for social media.']
+        quest : 'Is the app safe to use?',
+        ans : 'Yes, the app only processes existing ultrasound images and does not interfere with medical devices. All data is encrypted to ensure user privacy.'
         
     },
     {
-        quest : 'Ultrasound enhancement process for studios?',
-        ans : ['The results resemble actual photographs.', 'The processing is automated and only takes about 2 minutes - parents appreciate receiving their enhanced results immediately after their ultrasound.', 'The fee is per baby, not per ultrasound. So, you can process multiple 3D ultrasounds of the same baby at once and get numerous enhanced results for one price.', 'You can download transformation video for free. It can include your studio logo – great for social media.']
+        quest : 'Can it be used with any type of ultrasound machine?',
+        ans : 'The app is compatible with most existing ultrasound images, regardless of the machine used. It works with images uploaded or provided by healthcare professionals after an ultrasound.'
         
     },
     {
-        quest : 'Maximum number of 3D ultrasounds that can be processed at once?',
-        ans : ['The results resemble actual photographs.', 'The processing is automated and only takes about 2 minutes - parents appreciate receiving their enhanced results immediately after their ultrasound.', 'The fee is per baby, not per ultrasound. So, you can process multiple 3D ultrasounds of the same baby at once and get numerous enhanced results for one price.', 'You can download transformation video for free. It can include your studio logo – great for social media.']
+        quest : 'Can the app be used at home by individuals?',
+        ans : 'Yes, individuals can use the app after obtaining their ultrasound images from a healthcare professional. It then enhances the visual quality of the images for a better personal experience.'
+        
+    },
+    {
+        quest : 'Are there special prices or discounts for studios?',
+        ans :'Yes, we offer subscription plans specifically for professionals, including studios and healthcare providers. These plans provide access to special pricing and features tailored to meet the needs of professional users.'
         
     },
 ]
@@ -44,14 +49,14 @@ function FreqaskQuest() {
                 <summary className='cursor-pointer flex justify-between font-medium'>{elm.quest} <p className='SummMark'></p></summary>
                 <div>
                     {
-                        elm.ans.map((elm2, ind2) => <li key={ind2} className='ps-2 py-2' style={{listStyle : 'number'}}>{elm2}</li>)
+                         <li key={ind} className='ps-2 py-2' style={{listStyle : 'none'}}>{elm.ans}</li>
                     }
                 </div>
             </details> : <details className='Faq bg-[#F5F5F5] rounded-2xl p-3 px-10 mt-3 shadow' key={ind} >
                 <summary className='cursor-pointer flex justify-between font-medium'>{elm.quest} <p className='SummMark'></p></summary>
                 <div>
                     {
-                        elm.ans.map((elm2, ind2) => <li key={ind2} className='ps-2 py-2' style={{listStyle : 'number'}}>{elm2}</li>)
+                        <li key={ind} className='ps-2 py-2' style={{listStyle : 'none'}}>{elm.ans}</li>
                     }
                 </div>
             </details>)

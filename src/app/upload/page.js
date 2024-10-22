@@ -229,7 +229,7 @@ function UploadPage() {
         {/* Results Section */}
         <div className="rounded-xl bg-[#F5F5F5] xl:w-[50%] lg:w-[55%] sm:w-[62%] w-[90%] sm:my-0 my-8 flex items-center py-3 flex-col">
           <h1 className="text-[#ED82B8] mt-7 font-bold text-[18px]">Results</h1>
-          <div className="w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[55vh] flex justify-center items-center">
+          <div className="w-[95%] mx-auto rounded-xl mt-2 bg-[#ADB5BD] h-[65vh] flex justify-center items-center">
             {loadingState ? (
               <p>Loading...</p>
             ) : error ? (

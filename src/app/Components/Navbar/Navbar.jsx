@@ -60,7 +60,7 @@ function Navbar() {
         
 
         {/* Desktop navigation */}
-        <ul className="md:flex hidden justify-between lg:w-[25%] md:w-[35%] Navbarr">
+        <ul className="md:flex hidden justify-between gap-3 Navbarr">
           <li>
             <Link
               href="/"
@@ -69,7 +69,7 @@ function Navbar() {
               Home
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               href="/blog"
               className={`${pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
@@ -84,7 +84,7 @@ function Navbar() {
             >
               Affiliate
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link
               href="/contact"
@@ -164,7 +164,7 @@ function Navbar() {
                   Home
                 </Link>
               </li>
-              <li className="my-2">
+              {/* <li className="my-2">
                 <Link
                   href="/blog"
                   className={`${pathName === "/blog" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
@@ -179,7 +179,7 @@ function Navbar() {
                 >
                   Affiliate
                 </Link>
-              </li>
+              </li> */}
               <li className="my-2">
                 <Link
                   href="/contact"
