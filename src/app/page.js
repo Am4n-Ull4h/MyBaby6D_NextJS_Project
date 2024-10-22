@@ -9,13 +9,13 @@ let tableData = [
   { R1: "Photo-like", R2: "❌", R3: "✓" },
   { R1: "Cost", R2: "$17.95 - $40", R3: "$14.99" },
   { R1: "Delivery Time", R2: "at least 48 hours", R3: "2 minutes" },
-  { R1: "Free Preview", R2: "❌", R3: "✓" },
+  // { R1: "Free Preview", R2: "❌", R3: "✓" },
   { R1: "Quantity of Results", R2: "1", R3: "Many" },
   { R1: "Ultrasounds Processed At Once", R2: "1", R3: "Many" },
   { R1: "Customization", R2: "Skin color", R3: "Race & ethnicity, gender" },
-  { R1: "Open eyes", R2: "❌", R3: "Optional" },
-  { R1: "Hair", R2: "❌", R3: "Optional" },
-  { R1: "Take Poor Quality Ultrasounds as Input", R2: "❌", R3: "✓" },
+  // { R1: "Open eyes", R2: "❌", R3: "Optional" },
+  // { R1: "Hair", R2: "❌", R3: "Optional" },
+  // { R1: "Take Poor Quality Ultrasounds as Input", R2: "❌", R3: "✓" },
 ];
 
 export default function Home() {
@@ -154,7 +154,7 @@ export default function Home() {
                 Experience the future <br className="br1" />
                 of Ultrasound
               </h1>
-              <button className="bg-[#ED82B8] mt-12 text-[#FFFFFF] font-semibold block mx-auto text-sm p-2 px-4 rounded-lg">
+              <button className="bg-[#ED82B8] mt-12 text-[#FFFFFF] font-semibold block mx-auto text-sm p-2 px-4 rounded-lg" onClick={()=>navigate.push('/upload')}>
                 Get started now
               </button>
             </div>
