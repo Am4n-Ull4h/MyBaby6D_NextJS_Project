@@ -8,10 +8,8 @@ import { signOut, updateProfile } from "firebase/auth";
 import { ImCancelCircle } from "react-icons/im";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { ProfileContext } from "../ContextApi/Context";
-import FrenchNav from "../FrenchTranslate/FrenchNav";
 
-
-function Navbar() {
+function FrenchNav() {
   const [picState, setPicState] = useState(false);
   const [nav, setNav] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -19,16 +17,13 @@ function Navbar() {
   const navigate = useRouter();
   const pathName = usePathname();
 
-  const [userProfilePic, setUserProfilePic] = useState('./user.png');
-
-  let { translate, setTranslate } = useContext(ProfileContext)
+  const [userProfilePic, setUserProfilePic] = useState("./user.png");
+  let { setTranslate } = useContext(ProfileContext);
 
   useEffect(() => {
     if (user && user.photoURL) {
       setUserProfilePic(user.photoURL);
     }
-
-    
   }, [user]);
 
   const handleImageUpload = async (e) => {
@@ -51,8 +46,6 @@ function Navbar() {
 
   return (
     <Fragment>
-      {
-        translate ? <FrenchNav /> :
       <nav className="bg-[#121212] px-7 flex justify-between items-center h-[10vh]">
         <div className="h-[70px] w-[170px] flex items-center justify-center overflow-hidden">
           <img
@@ -63,16 +56,16 @@ function Navbar() {
           />
         </div>
 
-        
-
         {/* Desktop navigation */}
         <ul className="md:flex hidden justify-between gap-3 Navbarr">
           <li>
             <Link
               href="/"
-              className={`${pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
+              className={`${
+                pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"
+              } text-sm hover:text-[#F05454]`}
             >
-              Home
+              Accueil
             </Link>
           </li>
           {/* <li>
@@ -94,9 +87,11 @@ function Navbar() {
           <li>
             <Link
               href="/contact"
-              className={`${pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
+              className={`${
+                pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"
+              } text-sm hover:text-[#F05454]`}
             >
-              Contact Us
+              Contactez-nous
             </Link>
           </li>
         </ul>
@@ -112,7 +107,9 @@ function Navbar() {
                 onClick={() => setPicState(!picState)}
               />
               <div
-                className={`${picState ? "block" : "hidden"} bg-[#121212] p-2 text-nowrap absolute text-[12px] rounded-xl top-[30px] -left-8 pt-9`}
+                className={`${
+                  picState ? "block" : "hidden"
+                } bg-[#121212] p-2 text-nowrap absolute text-[12px] rounded-xl top-[30px] -left-8 pt-9`}
               >
                 <ImCancelCircle
                   onClick={() => setPicState(false)}
@@ -141,7 +138,10 @@ function Navbar() {
             </div>
           ) : (
             <>
-              <Link href="/login" className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]">
+              <Link
+                href="/login"
+                className="text-[#F5F5F5] mr-5 text-sm hover:text-[#F05454]"
+              >
                 Login
               </Link>
               <Link href="/signup" className="text-[#F05454] text-sm">
@@ -150,28 +150,41 @@ function Navbar() {
             </>
           )}
 
-          <p className="cursor-pointer text-[13px] text-[#F05454]" onClick={()=>setTranslate(true)}>French?</p>
+          <p
+            className="cursor-pointer text-[13px] text-[#F05454]"
+            onClick={() => setTranslate(false)}
+          >
+            English?
+          </p>
         </div>
 
         {/* Mobile Menu */}
         <div className="relative md:hidden flex items-center gap-5">
-        <p className="cursor-pointer text-[13px] text-[#F05454]" onClick={()=>setTranslate(true)}>French?</p>
-
+        <p
+            className="cursor-pointer text-[13px] text-[#F05454]"
+            onClick={() => setTranslate(false)}
+          >
+            English?
+          </p>
           <MdOutlineSegment
             className="md:hidden block cursor-pointer text-[#F5F5F5]"
             onClick={() => setNav(!nav)}
             aria-label="Toggle Navigation"
           />
           <div
-            className={`${nav === false ? "hidden" : "block"} md:hidden absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}
+            className={`${
+              nav === false ? "hidden" : "block"
+            } md:hidden absolute z-20 -right-4 rounded-xl top-6 bg-[#111111ac] p-5 px-7`}
           >
             <ul className="Navbarr" onClick={() => setNav(false)}>
               <li className="my-2">
                 <Link
                   href="/"
-                  className={`${pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454] py-2 `}
+                  className={`${
+                    pathName === "/" ? "text-[#F05454]" : "text-[#F5F5F5]"
+                  } text-sm hover:text-[#F05454] py-2 `}
                 >
-                  Home
+                  Accueil
                 </Link>
               </li>
               {/* <li className="my-2">
@@ -193,9 +206,13 @@ function Navbar() {
               <li className="my-2">
                 <Link
                   href="/contact"
-                  className={`${pathName === "/contact" ? "text-[#F05454]" : "text-[#F5F5F5]"} text-sm hover:text-[#F05454]`}
+                  className={`${
+                    pathName === "/contact"
+                      ? "text-[#F05454]"
+                      : "text-[#F5F5F5]"
+                  } text-sm hover:text-[#F05454]`}
                 >
-                  Contact Us
+                  Contactez-nous
                 </Link>
               </li>
               {user ? (
@@ -213,7 +230,10 @@ function Navbar() {
               ) : (
                 <>
                   <li className="my-2">
-                    <Link href="/login" className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]">
+                    <Link
+                      href="/login"
+                      className="text-[#F5F5F5] mr-5 text-sm block py-2 hover:text-[#F05454]"
+                    >
                       Login
                     </Link>
                   </li>
@@ -228,10 +248,8 @@ function Navbar() {
           </div>
         </div>
       </nav>
-      }
-
     </Fragment>
   );
 }
 
-export default Navbar;
+export default FrenchNav;

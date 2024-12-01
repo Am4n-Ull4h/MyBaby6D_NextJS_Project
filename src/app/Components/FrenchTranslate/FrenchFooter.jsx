@@ -1,26 +1,20 @@
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'
-import React, { Fragment, useContext } from 'react'
+import React, { Fragment } from 'react'
 import { FaInstagram } from "react-icons/fa";
 import { FaTwitter } from "react-icons/fa";
 import { FaFacebook } from "react-icons/fa";
-import FrenchFooter from '../FrenchTranslate/FrenchFooter';
-import { ProfileContext } from '../ContextApi/Context';
 
 
-function Footer() {
-  let { translate } = useContext(ProfileContext)
-
+function FrenchFooter() {
 
     let navigate = useRouter()
   return (
     <Fragment>
-        {
-            translate ? <FrenchFooter /> :
         <div className='w-full bg-[#121212] p-5 pt-7 text-[#f5f5f59d]'>
             <div className='flex justify-evenly'>
                 <div className='md:w-[40%] w-[48%]'>
-                    <p className='text-lg font-light text-center'>Follow us on social media for regular freebies and exclusive offers!</p>
+                    <p className='text-lg font-light text-center'>Suivez-nous sur les réseaux sociaux pour des cadeaux réguliers et des offres exclusives!</p>
                     <div className='flex justify-between lg:w-[35%] md:w-[50%] sm:w-[70%] mx-auto mt-5'>
                         <div className='h-[40px] w-[40px] rounded-full bg-[#F5F5F5] text-black text-[22px]'>
                         
@@ -46,21 +40,19 @@ function Footer() {
                     </div>
                 </div>
                 <div className='md:w-[40%] w-[48%]'>
-                    <p className='text-lg font-light text-center'>Got questions or comments? We're here to listen.</p>
-                    <button className='mt-5 rounded-xl bg-[#F5F5F5] font-bold sm:px-7 px-3 py-2 text-[#121212] block mx-auto' onClick={()=>navigate.push('/contact')}>Contact us</button>
+                    <p className='text-lg font-light text-center'>Vous avez des questions ou des commentaires ? Nous sommes là pour vous écouter</p>
+                    <button className='mt-5 rounded-xl bg-[#F5F5F5] font-bold sm:px-7 px-3 py-2 text-[#121212] block mx-auto' onClick={()=>navigate.push('/contact')}>Contactez-nous</button>
                 </div>
             </div>
             <div className='md:w-[80%] w-[90%] mx-auto text-lg mt-8 font-light text-center'>
-            The provided service does not claim to predict or guarantee the appearance or gender of a baby. Any information or results obtained through the use of this service should not be considered as a definitive determination and are solely for entertainment purposes.
-            <br /> © 2024 - All Rights Reserved
+            Le service proposé ne prétend pas prédire ou garantir l’apparence ou le sexe d’un bébé. Toute information ou tout résultat obtenu grâce à l’utilisation de ce service ne doit pas être considéré comme une détermination définitive et est uniquement destiné à des fins de divertissement.
+            <br /> © 2024 - Tous droits réservés
             </div>
 
         </div>
-        }
-
       
     </Fragment>
   )
 }
 
-export default Footer
+export default FrenchFooter

@@ -36,6 +36,8 @@ let FAQsData = [
 ]
 
 function FreqaskQuest() {
+
+    
   return (
     <Fragment>
       <div className='text-center mt-12'>

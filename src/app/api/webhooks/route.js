@@ -6,11 +6,23 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
 
 // Initialize Firebase Admin
-const serviceAccount = require('../../config/babygen-cc2ff-firebase-adminsdk-j5d96-4fea09bd9b.json');
+// const serviceAccount = require('../../config/babygen-cc2ff-firebase-adminsdk-j5d96-4fea09bd9b.json');
 
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
+    credential: admin.credential.cert({
+      "type": process.env.FIREBASE_PROJECT_TYPE,
+      "project_id": process.env.FIREBASE_PROJECT_ID,
+      "private_key_id":  process.env.FIREBASE_PRIVATE_KEY_ID,
+      "private_key":  process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+      "client_email":  process.env.FIREBASE_CLIENT_EMAIL,
+      "client_id":  process.env.FIREBASE_CLIENT_ID,
+      "auth_uri":  process.env.FIREBASE_AUTH_URI,
+      "token_uri":  process.env.FIREBASE_TOKEN_URI,
+      "auth_provider_x509_cert_url":  process.env.FIREBASE_AUTH_PROVIDER,
+      "client_x509_cert_url":  process.env.FIREBASE_CERT_URL,
+      "universe_domain":  process.env.FIREBASE_UNIVERSE_DOMAIN
+    }),
     databaseURL: process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL, // Your Firebase database URL
   });
 }
