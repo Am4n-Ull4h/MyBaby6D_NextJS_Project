@@ -28,7 +28,6 @@ export async function POST(req) {
       text: `You have a new message:\n\nName: ${name}\nEmail: ${email}\nMessage: ${message}`,
     };
 
-    // Send email
     await transporter.sendMail(mailOptions);
 
     return new Response(
